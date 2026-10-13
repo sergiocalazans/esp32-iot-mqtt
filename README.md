@@ -67,12 +67,8 @@ esp32-iot-mqtt/
 │   ├── pc_mqtt.py
 │   └── teste_broker.py
 ├── docs/
-│   ├── RELATORIO.md
-│   ├── img/
-│   │   ├── banner.png
-│   │   └── prototipo-final.jpg
-│   └── video/
-│       └── demonstracao.mp4
+│   └── RELATORIO.md
+├── img/
 ├── requirements.txt
 ├── .gitignore
 └── README.md
