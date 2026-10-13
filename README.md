@@ -1,6 +1,6 @@
 <div align="center">
 
-![Banner do projeto ESP32 IoT](https://raw.githubusercontent.com/sergiocalazans/esp32-iot-mqtt/main/docs/img/banner.png)
+![Banner do projeto ESP32 IoT](https://raw.githubusercontent.com/sergiocalazans/esp32-iot-mqtt/main/img/banner.png)
 
 # Monitoramento de Reservatório com ESP32 e MQTT
 
@@ -16,13 +16,13 @@ O sensor **HC-SR04** mede a distância até a superfície, usada como referênci
 
 ## Protótipo final
 
-![Fotografia do protótipo final com ESP32 e sensores](https://raw.githubusercontent.com/sergiocalazans/esp32-iot-mqtt/main/docs/img/prototipo-final.png)
+![Fotografia do protótipo final com ESP32 e sensores](https://raw.githubusercontent.com/sergiocalazans/esp32-iot-mqtt/main/img/prototipo-final.png)
 
 _Montagem física do protótipo com ESP32, sensores DHT11 e HC-SR04, LEDs e buzzer._
 
 ## Demonstração em vídeo
 
-**[▶ Assistir à demonstração do protótipo](https://raw.githubusercontent.com/sergiocalazans/esp32-iot-mqtt/main/docs/video/video.mp4)**
+**[▶ Assistir à demonstração do protótipo](https://youtube.com/shorts/oOtab-wPSVg?si=J7D00AKEp8U1KYNm)**
 
 ## Funcionalidades
 

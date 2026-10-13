@@ -152,7 +152,7 @@ _Figura 5 — Protótipo físico completo._
 
 ### 6.1. Demonstração em vídeo
 
-[![Assistir ao vídeo](https://raw.githubusercontent.com/sergiocalazans/esp32-iot-mqtt/main/docs/img/banner.png)](https://raw.githubusercontent.com/sergiocalazans/esp32-iot-mqtt/main/docs/video/video.mp4)
+**[▶ Assistir à demonstração do protótipo](https://youtube.com/shorts/oOtab-wPSVg?si=J7D00AKEp8U1KYNm)**
 
 ## 7. Testes e resultados
 
