@@ -1,157 +1,105 @@
-# Monitoramento e Controle IoT com ESP32 e MQTT
+<div align="center">
 
-Projeto acadêmico desenvolvido no **3º período de Ciência da Computação da PUCPR**, na disciplina **Experiência Criativa: Criando Soluções Computacionais**. O sistema integra um microcontrolador ESP32, sensores e atuadores com uma aplicação Python no computador, utilizando o protocolo MQTT para troca de mensagens em JSON.
+![Banner do projeto ESP32 IoT](https://raw.githubusercontent.com/sergiocalazans/esp32-iot-mqtt/main/docs/img/banner.png)
 
-## Objetivo
+# Monitoramento de Reservatório com ESP32 e MQTT
 
-Explorar conceitos de Internet das Coisas (IoT), sistemas embarcados e comunicação no modelo _publish/subscribe_, permitindo coletar medições, publicar dados em tópicos MQTT e enviar comandos remotamente ao ESP32.
+**Projeto acadêmico de Internet das Coisas (IoT) com MicroPython, Python e comunicação MQTT.**
+
+</div>
+
+## Sobre o projeto
+
+Desenvolvido no **3º período de Ciência da Computação da PUCPR**, na disciplina **Experiência Criativa: Criando Soluções Computacionais**, o projeto apresenta um protótipo de monitoramento de reservatório de água. Um **ESP32** integra sensores e atuadores, enquanto uma aplicação **Python** no computador recebe medições e envia comandos pela rede usando o protocolo **MQTT**.
+
+O sensor **HC-SR04** mede a distância até a superfície, usada como referência para o nível da água; o **DHT11** coleta temperatura e umidade do ambiente. LEDs e buzzer fornecem alertas locais conforme as faixas de distância configuradas.
+
+## Protótipo final
+
+![Fotografia do protótipo final com ESP32 e sensores](https://raw.githubusercontent.com/sergiocalazans/esp32-iot-mqtt/main/docs/img/prototipo-final.png)
+
+_Montagem física do protótipo com ESP32, sensores DHT11 e HC-SR04, LEDs e buzzer._
+
+## Demonstração em vídeo
+
+**[▶ Assistir à demonstração do protótipo](https://raw.githubusercontent.com/sergiocalazans/esp32-iot-mqtt/main/docs/video/video.mp4)**
+
+## Funcionalidades
+
+- Leitura de **temperatura e umidade** com DHT11.
+- Medição de **distância** com HC-SR04 para acompanhamento do nível de água.
+- Sinalização por **LEDs e buzzer** de acordo com faixas de distância.
+- Envio de dados em **JSON** por tópicos MQTT.
+- Recebimento de comandos remotos (`led_on`, `led_off` e `status`).
+- Comunicação MQTT com **QoS 1**, sessões configuradas como persistentes e assinatura de múltiplos tópicos com **wildcard**.
 
 ## Tecnologias e componentes
 
-- **Hardware:** ESP32, sensor DHT11 (temperatura e umidade), sensor ultrassônico HC-SR04 (distância), LEDs e buzzer.
-- **ESP32:** MicroPython, `umqtt.simple`, `machine`, `network` e `dht`.
-- **Computador:** Python 3 e biblioteca `paho-mqtt`.
-- **Comunicação:** MQTT, JSON, Wi-Fi e broker público `test.mosquitto.org` (porta 1883).
+| Categoria              | Tecnologias e componentes    |
+| ---------------------- | ---------------------------- |
+| Microcontrolador       | ESP32                        |
+| Linguagens             | MicroPython e Python         |
+| Comunicação            | Wi-Fi, MQTT e JSON           |
+| Bibliotecas            | `umqtt.simple` e `paho-mqtt` |
+| Sensores               | DHT11 e HC-SR04              |
+| Atuadores              | LEDs e buzzer                |
+| Broker de demonstração | `test.mosquitto.org`         |
 
-## Funcionalidades implementadas no código
+## Comunicação MQTT
 
-- Leitura de temperatura e umidade com DHT11.
-- Medição de distância com HC-SR04.
-- Alertas locais por LEDs e buzzer conforme faixas de distância.
-- Publicação de dados dos sensores em tópicos distintos.
-- Recepção de comandos `led_on`, `led_off` e `status`.
-- Comunicação com **QoS 1** e configuração de sessões MQTT persistentes.
-- Assinatura com wildcard `+` na aplicação do computador.
-- Tentativa de reconexão automática configurada no cliente Python do computador.
+O ESP32 publica as leituras dos sensores e os estados do dispositivo no broker MQTT. A aplicação Python se inscreve nos tópicos de dados, apresenta as mensagens recebidas e publica comandos para o ESP32.
 
-## Arquitetura
+| Tópico                | Finalidade                               |
+| --------------------- | ---------------------------------------- |
+| `grupo12/sala1/dados` | Temperatura e umidade (DHT11)            |
+| `grupo12/sala2/dados` | Distância e estado do alerta (HC-SR04)   |
+| `grupo12/sala3/dados` | Estado do LED                            |
+| `grupo12/pc/comandos` | Comandos enviados pelo computador        |
+| `grupo12/+/dados`     | Assinatura de dados de múltiplos tópicos |
 
-```text
-                    Broker MQTT público
-                     test.mosquitto.org
-                         porta 1883
-                         /        \
-                        /          \
-                  Wi-Fi /            \ Rede
-                      /              \
-                 ESP32               Computador
-              (MicroPython)          (Python)
-              umqtt.simple           paho-mqtt
-                /     \                   |
-         DHT11 /       \ HC-SR04          | Terminal:
-             /         \                 | comandos e dados
-        LEDs e buzzer (atuadores)
-```
-
-O computador publica comandos no tópico `grupo12/pc/comandos`; o ESP32 assina esse tópico e publica informações dos sensores nos tópicos `grupo12/sala1/dados` e `grupo12/sala2/dados`. O tópico `grupo12/sala3/dados` é utilizado para publicar o estado do LED. O computador assina `grupo12/+/dados`, recebendo mensagens das três salas.
-
-### Tópicos MQTT
-
-| Tópico                | Publicador | Conteúdo                                          |
-| --------------------- | ---------- | ------------------------------------------------- |
-| `grupo12/pc/comandos` | Computador | Comandos JSON destinados ao ESP32                 |
-| `grupo12/sala1/dados` | ESP32      | Temperatura e umidade do DHT11                    |
-| `grupo12/sala2/dados` | ESP32      | Distância do HC-SR04 e descrição do alerta        |
-| `grupo12/sala3/dados` | ESP32      | Estado do LED                                     |
-| `grupo12/+/dados`     | —          | Assinatura com wildcard utilizada pelo computador |
-
-### Exemplos de mensagens
-
-Comando enviado pelo computador:
-
-```json
-{ "comando": "led_on" }
-```
-
-Dados de temperatura e umidade (exemplo ilustrativo):
-
-```json
-{ "sensor": "dht11", "temperatura": 25, "umidade": 60, "status": "enviado" }
-```
-
-Dados de distância (exemplo ilustrativo):
-
-```json
-{ "sensor": "hc-sr04", "distancia": 85.0, "led_status": "Vermelho (Perigo)" }
-```
-
-## Estrutura do projeto
+## Estrutura do repositório
 
 ```text
 esp32-iot-mqtt/
 ├── esp32/
-│   └── esp32_mqtt.py       # Programa do microcontrolador
+│   └── esp32_mqtt.py
 ├── pc/
-│   ├── pc_mqtt.py          # Cliente MQTT para comandos e recepção
-│   └── teste_broker.py     # Teste de conexão ao broker
+│   ├── pc_mqtt.py
+│   └── teste_broker.py
 ├── docs/
-│   └── imagens/            # Espaço reservado para fotos e diagramas
-├── .gitignore
+│   ├── RELATORIO.md
+│   ├── img/
+│   │   ├── banner.png
+│   │   └── prototipo-final.jpg
+│   └── video/
+│       └── demonstracao.mp4
 ├── requirements.txt
+├── .gitignore
 └── README.md
 ```
 
 ## Como executar
 
-### 1. Preparar o computador
+1. Instale o Python no computador e as dependências com `pip install -r requirements.txt`.
+2. Configure o ESP32 com firmware **MicroPython** e a biblioteca `umqtt.simple`.
+3. Ajuste as configurações de Wi-Fi no arquivo `esp32/esp32_mqtt.py` e confirme os pinos da montagem.
+4. Execute o código do ESP32 pelo **Thonny**.
+5. No computador, verifique a conexão com `python pc/teste_broker.py` e execute `python pc/pc_mqtt.py`.
+6. Utilize os comandos `led_on`, `led_off` e `status` no terminal.
 
-Instale Python 3 e execute, na raiz do repositório:
+> **Atenção:** o projeto utiliza um broker público na porta 1883, sem criptografia, apenas para fins didáticos. Antes de executar no hardware, revise o uso compartilhado do GPIO 2 pelo LED e pelo TRIG do HC-SR04 e a ausência de timeout na leitura do sensor ultrassônico.
 
-```bash
-python -m pip install -r requirements.txt
-python pc/teste_broker.py
-```
+## Documentação técnica
 
-O teste deve indicar se a conexão com o broker foi estabelecida. Depois, execute:
+O detalhamento do desenvolvimento, das atividades realizadas e dos resultados está disponível no documento separado:
 
-```bash
-python pc/pc_mqtt.py
-```
+**📄 [Acessar o relatório técnico](https://github.com/sergiocalazans/esp32-iot-mqtt/main/docs/RELATORIO.md)**
 
-### 2. Preparar o ESP32
-
-1. Grave uma versão compatível do firmware MicroPython na placa.
-2. Abra `esp32/esp32_mqtt.py` no Thonny e selecione o interpretador MicroPython (ESP32).
-3. Configure `SSID` e `SENHA` de uma rede Wi-Fi **2,4 GHz**; evite inserir senhas reais em arquivos versionados.
-4. Confirme a pinagem conforme a montagem física e instale `umqtt.simple` no dispositivo, caso necessário.
-5. Execute o script no ESP32 e acompanhe a saída serial no Thonny.
-6. No terminal do computador, envie `led_on`, `led_off` ou `status`.
-
-> **Atenção:** antes de executar no hardware, revise as ressalvas de pinagem e leitura ultrassônica indicadas abaixo. O código fornecido usa o GPIO 2 tanto para o LED quanto para o pino TRIG do HC-SR04.
-
-## Alertas por distância
-
-As condições programadas no ESP32 são:
-
-| Distância                           | Sinalização                               |
-| ----------------------------------- | ----------------------------------------- |
-| Menor que 100 cm                    | LED vermelho e três sinais sonoros de 4 s |
-| Maior que 200 cm e menor que 300 cm | LED amarelo e sinal de 0,2 s              |
-| Maior que 300 cm                    | LED verde e sinal de 0,1 s                |
-
-As distâncias entre 100 e 200 cm, inclusive, e os limites exatos de 300 cm não recebem classificação nessas condições. A leitura do HC-SR04 também não possui timeout; uma ausência de eco pode bloquear a execução.
-
-## Limitações e cuidados
-
-- **GPIO compartilhado:** o GPIO 2 está configurado para o LED e o TRIG do HC-SR04; é necessário corrigir o conflito antes de uma montagem confiável.
-- **Leitura do ultrassônico:** os loops de espera do ECHO não possuem timeout.
-- **Segurança:** a porta 1883 do broker público não utiliza TLS nem autenticação; use apenas dados não sensíveis e, para aplicações reais, prefira broker autenticado e conexão criptografada.
-- **Identificadores e tópicos:** os IDs `esp32-grupo12` e `pc-grupo12` e os tópicos `grupo12/...` devem ser alterados se houver conflitos com outras instalações.
-- **Sessões persistentes:** o código solicita sessões persistentes, mas não demonstra testes documentados de entrega após desconexões.
-- **Execução:** o projeto depende de conectividade com o broker público e de montagem física compatível com a pinagem.
-
-## Aprendizados
-
-O projeto aborda integração entre software e hardware, leitura de sensores, acionamento de atuadores, comunicação assíncrona com MQTT, estruturação de mensagens em JSON e conceitos de QoS, tópicos e persistência de sessão.
-
-## Contexto acadêmico
-
-Desenvolvido a partir de uma atividade da disciplina **Experiência Criativa: Criando Soluções Computacionais**, da **Pontifícia Universidade Católica do Paraná (PUCPR)**. A proposta da atividade envolvia comunicação MQTT entre Python e MicroPython e desafios de sensores reais, QoS e múltiplos sensores e atuadores.
+---
 
 ## Referências
 
-- [Documentação do MicroPython](https://docs.micropython.org/)
-- [Documentação do Eclipse Paho MQTT para Python](https://eclipse.dev/paho/files/paho.mqtt.python/html/)
-- [Protocolo MQTT](https://mqtt.org/)
-- [Broker público Mosquitto](https://test.mosquitto.org/)
-- [Thonny IDE](https://thonny.org/)
+- [MicroPython — Documentação oficial](https://docs.micropython.org/)
+- [Eclipse Paho MQTT Python](https://eclipse.dev/paho/files/paho.mqtt.python/html/)
+- [MQTT — Site oficial](https://mqtt.org/)
+- [Mosquitto — Broker público de testes](https://test.mosquitto.org/)
