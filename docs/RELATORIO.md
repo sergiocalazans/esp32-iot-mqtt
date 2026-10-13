@@ -103,7 +103,7 @@ Foi implementada a leitura de temperatura e umidade por meio do sensor DHT11. Du
 
 O relatório original registra uma dificuldade com o DHT11 inicialmente utilizado no kit, que precisou ser substituído por outro componente para viabilizar os testes.
 
-![Protótipo do circuito com sensores](https://raw.githubusercontent.com/sergiocalazans/esp32-iot-mqtt/main/docs/img/prototipo.jpg)
+![Protótipo do circuito com sensores](https://raw.githubusercontent.com/sergiocalazans/esp32-iot-mqtt/main/img/prototipo.jpg)
 
 _Figura 1 — Montagem do protótipo com sensores. Adicionar imagem correspondente._
 
