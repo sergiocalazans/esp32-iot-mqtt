@@ -107,7 +107,7 @@ O relatório original registra uma dificuldade com o DHT11 inicialmente utilizad
 
 _Figura 1 — Montagem do protótipo com sensores. Adicionar imagem correspondente._
 
-![Leituras recebidas no computador](https://raw.githubusercontent.com/sergiocalazans/esp32-iot-mqtt/main/docs/img/resultado-servidor.jpg)
+![Leituras recebidas no computador](https://raw.githubusercontent.com/sergiocalazans/esp32-iot-mqtt/main/img/resultado-servidor.jpg)
 
 _Figura 2 — Mensagens recebidas pela aplicação Python. Adicionar captura correspondente._
 
@@ -117,7 +117,7 @@ A comunicação foi configurada para utilizar QoS 1 tanto na publicação quanto
 
 A configuração de sessão persistente foi aplicada aos clientes MQTT. No computador, o código verifica se uma sessão anterior foi restaurada por meio de `session_present` e define uma política de tentativa de reconexão. Isso não constitui, isoladamente, comprovação de que todas as mensagens tenham sido recuperadas após uma desconexão; tal comportamento depende das condições de sessão, assinatura e broker.
 
-![Circuito utilizado no segundo desafio](https://raw.githubusercontent.com/sergiocalazans/esp32-iot-mqtt/main/docs/img/prototipo-2.jpg)
+![Circuito utilizado no segundo desafio](https://raw.githubusercontent.com/sergiocalazans/esp32-iot-mqtt/main/img/prototipo-2.jpg)
 
 _Figura 3 — Montagem utilizada no desafio de QoS e persistência. Adicionar imagem correspondente._
 
@@ -127,7 +127,7 @@ Foram utilizados tópicos distintos para transmitir os dados do DHT11, do HC-SR0
 
 A estrutura permite receber e apresentar informações de diferentes categorias sem cadastrar individualmente cada tópico na aplicação Python.
 
-![Mensagens dos diferentes tópicos](https://raw.githubusercontent.com/sergiocalazans/esp32-iot-mqtt/main/docs/img/mensagens.png)
+![Mensagens dos diferentes tópicos](https://raw.githubusercontent.com/sergiocalazans/esp32-iot-mqtt/main/img/mensagens.png)
 
 _Figura 4 — Recepção das mensagens de múltiplos tópicos. Adicionar captura correspondente._
 
@@ -146,7 +146,7 @@ No código disponibilizado, as condições de acionamento são:
 
 **Observação técnica:** os intervalos entre 100 e 200 cm e alguns valores de fronteira não estão contemplados nas condições do código. As classificações acima reproduzem a lógica implementada e não representam uma calibração validada do reservatório.
 
-![Montagem completa do protótipo](https://raw.githubusercontent.com/sergiocalazans/esp32-iot-mqtt/main/docs/img/prototipo-final.png)
+![Montagem completa do protótipo](https://raw.githubusercontent.com/sergiocalazans/esp32-iot-mqtt/main/img/prototipo-final.png)
 
 _Figura 5 — Protótipo físico completo._
 
